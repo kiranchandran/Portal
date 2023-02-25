@@ -348,3 +348,6 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+/CompanyName.Api/Properties/ServiceDependencies
+/CompanyName.Web/Properties/ServiceDependencies
+/CompanyName.Web/wwwroot/images/Profile.PNG

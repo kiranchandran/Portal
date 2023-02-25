@@ -1,0 +1,136 @@
+﻿@page "/employees"
+@using CompanyName.Model.Models;
+@using CompanyName.Web.ApiServiceClients;
+@using CompanyName.Web.Extensions
+@using Microsoft.AspNetCore.Authorization;
+@inject EmployeeServiceClient EmployeeApiClient
+@inject DepartmentServiceClient DepartmentServiceClient
+@inject IJSRuntime JSRuntime
+@inject IToastService ToastService
+@attribute [Authorize]
+
+<PageTitle>Employees</PageTitle>
+
+<h1>Employees</h1>
+
+<p></p>
+
+@if (employees == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div>
+            <a class="btn btn-primary float-end" href="/saveemployee"><i class="oi oi-person" aria-hidden="true"></i> Add Employee</a>
+        </div>
+    </div>
+
+    <div class="row cls-search-border mt-4 mb-4">
+        <div>
+            <b>Advanced Search</b>
+        </div>
+        <div class="row">
+            <div class="form-group col-sm-3">
+                <label for="Name" class="col-sm-12 col-form-label">
+                    Name
+                </label>
+                <div class="col-sm-12">
+                    <InputText id="Name" class="form-control" placeholder="Name"
+                           @bind-Value="searchRequest.Name" />
+                </div>
+            </div>
+            <div class="form-group col-sm-3">
+                <label for="Email" class="col-sm-12 col-form-label">
+                    Email
+                </label>
+                <div class="col-sm-12">
+                    <InputText id="Email" class="form-control" placeholder="Email"
+                           @bind-Value="searchRequest.Email" />
+                </div>
+            </div>
+            <div class="form-group col-sm-4">
+                <label for="DepartmentId" class="col-sm-12 col-form-label">
+                    Department
+                </label>
+                <div class="col-sm-12">
+                    <select id="DepartmentId" class="form-control" @bind="searchRequest.DepartmentId">
+                        @if (departments != null)
+                    {
+                        <option value="">Select</option>
+                            @foreach (var dept in departments)
+                        {
+                            <option value="@dept.Id">@dept.Name</option>
+                        }
+                    }
+            </select>
+                </div>
+            </div>
+
+            <div class="form-group col-sm-2">
+                <label class="col-sm-12 col-form-label cls-hidden">
+                    Search
+                </label>
+                <button class="btn btn-primary mt-auto" @onclick="Search" type="button"><i class="oi oi-magnifying-glass" aria-hidden="true"></i> Search</button>
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Department</th>
+                    <th>Email</th>
+                    <th>DOB</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var employee in employees)
+                {
+                    <tr>
+                        <td>@employee.Name</td>
+                        <td>@employee.DepartmentName</td>
+                        <td>@employee.Email</td>
+                        <td>@employee.DateOfBirth.ToString("dd/MM/yyyy")</td>
+                        <td><a class="oi oi-pencil" href="/saveemployee/@employee.Id"></a></td>
+                        <th><a class="oi oi-delete" role="button" @onclick="(() => Delete(employee.Id))"></a></th>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@code {
+    private IList<EmployeeModel>? employees;
+    private EmployeeSearchRequest searchRequest = new EmployeeSearchRequest();
+    private IList<DepartmentModel>? departments;
+
+    protected override async Task OnInitializedAsync()
+    {
+        departments = await DepartmentServiceClient.GetAsync();
+        employees = await EmployeeApiClient.SearchAsync(searchRequest);
+    }
+
+    private async Task Search()
+    {
+        employees = await EmployeeApiClient.SearchAsync(searchRequest);
+    }
+
+    private async Task Delete(Guid employeeId)
+    {
+        var result = await JSRuntime.Confirm("Are you sure you want to delete this employee?");
+        if (result)
+        {
+            await EmployeeApiClient.DeleteAsync(employeeId);
+            ToastService.ShowSuccess("Employee deleted successfully.");
+            employees = await EmployeeApiClient.SearchAsync(searchRequest);
+        }
+    }
+}

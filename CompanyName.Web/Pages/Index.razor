@@ -1,0 +1,23 @@
+﻿@page "/"
+
+<PageTitle>Home</PageTitle>
+<AuthorizeView>
+    <Authorized>
+        <div class="mt-4">
+            <TechnicalDetails />
+        </div>
+
+    </Authorized>
+    <NotAuthorized>
+        <h4>The Portal and API is protected by Azure B2C </h4>
+        <div class="alert alert-danger mt-4">
+            <a href="authentication/login" class="btn btn-primary mr-4"> <i class="oi oi-key" aria-hidden="true"></i> Sign In (Using Azure B2C Custom Policy)</a>
+            <span>User Name : newuser@gmail.com</span>
+            <span>Password  : Daxa3703</span>
+        </div>
+        <div class="mt-4">
+            <TechnicalDetails />
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
+

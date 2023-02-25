@@ -1,0 +1,58 @@
+﻿@using CompanyName.Web.Constants;
+@inject IConfiguration Configuration
+@{
+    var apiBaseUrl = Configuration.GetValue<string>(AppSettingsConstants.ApiBaseUrl);
+}
+<div class="row mt-4">
+    
+   <div class="col-md-6">
+        <b> Technologies/Frameworks used</b>
+    <br />
+    <ul>
+        <li>
+            Blazor WASM for front end
+        </li>
+        <li>
+            Entity Framework and used In-Memory Provider
+        </li>
+        <li>
+            .NET Core 7
+        </li>
+        <li>
+            HttpClientfactory for HTTP calls from the Blazor WASM (This avoids socket exhaustion and handles DNS changes)
+        </li>
+        <li>
+            Repository pattern
+        </li>
+        <li>
+            Azure B2C for authentication
+        </li>
+        <li>
+            Azure web-apps for deployment
+        </li>
+        <li>
+            MOQ and TestServer for Unit Tests and Integration Tests
+        </li>
+    </ul>
+   </div>
+
+    <div class="col-md-6">
+        <b>Notes</b>
+        <p>Added few units test and integration test. There was not much scope for unit tests as this sample project doesn't have quite a lot of business scenarios or rules. Unit tests are really useful if we are doing some manipulations on the data we pull from data store. For eg, if we have are doing some analytics, calculations, transformations etc over the data. Added few integrations tests also as part of this assignment.</p>
+
+        <div class="mt-4">
+            <b>To Do's and Improvements</b>
+            <ul>
+                <li>Add caching for lookups (Departments)</li>
+                <li>More Unit tests and Integration Tests</li>
+            </ul>
+        </div>
+    </div>
+    
+
+</div>
+
+@*<div class="row mt-4">
+    <b>My Profile</b>
+    <img class="img-fluid" src="/images/profile.png" />
+</div>*@
